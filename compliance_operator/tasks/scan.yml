@@ -1,0 +1,28 @@
+---
+
+- name: Create scansettingbinding custom resource file
+  file:
+    path: '{{ work_dir }}/compliance.openshift.io/v1alpha1_scansettingbinding_cr.yaml'
+    state: touch
+
+- name: Add content to scansettingbinding custom resource
+  blockinfile:
+    path: '{{ work_dir }}/compliance.openshift.io/v1alpha1_scansettingbinding_cr.yaml'
+    block: |
+      apiVersion: compliance.openshift.io/v1alpha1
+      kind: ScanSettingBinding
+      metadata:
+        name: {{ scan_name }}
+      profiles:
+        - name: {{ scan_profile }}
+          kind: Profile
+          apiGroup: compliance.openshift.io/v1alpha1
+      settingsRef:
+        name: default
+        kind: ScanSetting
+        apiGroup: compliance.openshift.io/v1alpha1
+
+- name: Start a scan by creating the scansettingbinding custom resource object
+  shell: oc create -n {{ namespace }} -f '{{ work_dir }}/compliance.openshift.io/v1alpha1_scansettingbinding_cr.yaml'
+
+

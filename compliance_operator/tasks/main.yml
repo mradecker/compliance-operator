@@ -1,0 +1,12 @@
+---
+
+- import_tasks: olm.yml
+  when: olm | bool
+
+- import_tasks: source.yml
+  when: source | bool
+
+- import_tasks: scan.yml
+  when: scan | bool
+
+
