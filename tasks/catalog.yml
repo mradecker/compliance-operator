@@ -13,13 +13,14 @@
       kind: OperatorGroup
       metadata:
         name: compliance-operator
-        namespace: openshift-compliance
+        namespace: '{{ namespace }}'
       spec:
         targetNamespaces:
-        - openshift-compliance
+        - '{{ namespace }}'
 
 - name: Create the operator group
-  shell: oc create -f '{{ work_dir }}/operator-group.yml'
+  shell: oc create -f '{{ work_dir }}/operator-group.yaml'
+  ignore_errors: yes
 
 - name: Create subscription.yaml
   file: 
@@ -34,17 +35,17 @@
       kind: Subscription
       metadata:
         name: compliance-operator-sub
-        namespace: openshift-compliance
+        namespace: '{{ namespace }}'
       spec:
         channel: alpha
         name: compliance-operator
         source: {{ catalog_source }}
         sourceNamespace: openshift-marketplace
         # uncomment to specify a version
-        #startingCSV: compliance-operator.v0.1.15
+        startingCSV: '{{ version }}' 
       
 - name: Create the subscription
-  shell: oc create -f '{{ work_dir }}/subscription.yml'
-
+  shell: oc create -f '{{ work_dir }}/subscription.yaml'
+  ignore_errors: yes
 
 

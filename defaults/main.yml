@@ -1,20 +1,32 @@
 ---
 
-catalog: yes
+# Set this option to yes if installing the operator from the package manifest that corresponds to the catalog source
+catalog: no
 
+# Set this option to yes if using git clone from the source code
 source: no
 
-scan: no
+# Set this option to yes if you want the role to import the scan tasks after installing the operator
+scan: yes
 
-work_dir: $HOME/openscap
+# Set this option to yes to extract the results from node PVCs
+results: no
+
+user: kubeadmin 
+
+password: tUDow-2B3j2-QmhdX-LvESq 
+
+cluster_url: https://api.ide.dpaas.dicelab.net:6443
+
+work_dir: /home/ec2-user/openscap
 
 git_url: https://github.com/openshift/compliance-operator
 
 namespace: openshift-compliance
 
-scan_name: nist-moderate
+scan_name: nist-moderate-nodes
 
-scan_profile: ocp4-moderate
+scan_profile: rhcos4-moderate
 
 ubi8: registry.access.redhat.com/ubi8/ubi
 
@@ -28,5 +40,6 @@ master_results_dir: masters-scan-results
 
 catalog_source: redhat-operator-catalog
 
+version: compliance-operator.v0.1.17
 
 

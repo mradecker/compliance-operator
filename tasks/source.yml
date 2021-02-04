@@ -3,16 +3,13 @@
 - name: Clone git repository
   git:
     repo: '{{ git_url }}'
-    dest: '{{ work_dir }}'
+    dest: '{{ work_dir }}/compliance-operator'
     clone: yes
 
-- name: Create openshift-compliance namespace
-  shell: oc create -f deploy/ns.yaml
-
 - name: Create custom resource definitions
-  shell: for f in $(ls -1 deploy/crds/*crd.yaml); do oc apply -f $f -n {{ namespace }}; done
+  shell: 'for f in $(ls -1 {{ work_dir }}/compliance-operator/deploy/crds/*crd.yaml); do oc apply -f $f -n {{ namespace }}; done'
 
 - name: Create remaining objects
-  shell: oc apply -n {{ namespace }}  -f deploy/
+  shell: 'oc apply -n {{ namespace }}  -f {{ work_dir }}/compliance-operator/deploy/'
 
 

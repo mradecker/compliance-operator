@@ -1,5 +1,5 @@
 ---
 
-- hosts: '{{ utility }}'
+- hosts: localhost
   roles:
-  - '{{ work_dir }}/compliance-operator'
+  - $HOME/compliance-operator
