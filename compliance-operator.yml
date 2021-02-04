@@ -1,5 +1,5 @@
 ---
 
-- hosts: localhost
+- hosts: '{{ utility }}'
   roles:
-  - /home/mradecke/compliance-operator/compliance_operator
+  - '{{ work_dir }}/compliance-operator'
