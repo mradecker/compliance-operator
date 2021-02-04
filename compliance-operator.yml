@@ -1,0 +1,5 @@
+---
+
+- hosts: localhost
+  roles:
+  - /home/mradecke/compliance-operator/compliance_operator

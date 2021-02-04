@@ -2,13 +2,13 @@
 
 - name: Make openscap directory
   file:
-    path: {{ work_dir }}
+    path: '{{ work_dir }}'
     state: directory
 
 - name: Clone git repository
   git:
-    repo: {{ git_url }}
-    dest: {{ work_dir }}
+    repo: '{{ git_url }}'
+    dest: '{{ work_dir }}'
     clone: yes
 
 - name: Create openshift-compliance namespace

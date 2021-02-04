@@ -1,12 +1,12 @@
 ---
 
-olm: yes
+olm: no
 
-source: no
+source: yes
 
 scan: no
 
-work_dir: openscap
+work_dir: /home/mradecke/compliance-operator/openscap
 
 git_url: https://github.com/openshift/compliance-operator
 
