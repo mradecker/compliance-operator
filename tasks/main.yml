@@ -5,6 +5,14 @@
   results: compliance_operator
   failed_when: compliance_operator.rc == 2
 
+- name: Create openscap directory
+  file:
+    path: '{{ work_dir }}'
+    state: directory
+
+- name: Create openshift-compliance namespace
+  shell: oc new-project openshift-compliance
+
 - import_tasks: catalog.yml
   when: catalog | bool and compliance_operator.rc == 1
 

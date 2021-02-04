@@ -1,10 +1,5 @@
 ---
 
-- name: Make openscap directory
-  file:
-    path: '{{ work_dir }}'
-    state: directory
-
 - name: Clone git repository
   git:
     repo: '{{ git_url }}'
