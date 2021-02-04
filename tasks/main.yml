@@ -3,25 +3,21 @@
 - name: Log into cluster
   shell: 'oc login -u {{ user }} -p {{ password }} {{ cluster_url }}'
 
-- name: Check to see if there is openshift-compliance namespace
-<<<<<<< HEAD
+- name: Check to see if there is an openshift-compliance namespace
   shell: 'oc create ns {{ namespace }}' 
-=======
-  shell: oc project openshift-compliance 
->>>>>>> b1f9e4884ee7be861cfb5c7019c4b60e76f50ab5
   register: compliance_ns
   failed_when: compliance_ns.rc == 2
-
-- name: Create openscap directory
-  file:
-    path: '{{ work_dir }}'
-    state: directory
 
 - name: Create openshift-compliance namespace
   shell: 'oc create ns {{ namespace }}'
   register: create_ns
   when: compliance_ns.rc == 1
   failed_when: create_ns.rc == 2
+
+- name: Create openscap directory
+  file:
+    path: '{{ work_dir }}'
+    state: directory
 
 - import_tasks: catalog.yml
   when: catalog | bool 
@@ -32,4 +28,5 @@
 - import_tasks: scan.yml
   when: scan | bool
 
-
+- import_tasks: results.yml
+  when: results | bool
