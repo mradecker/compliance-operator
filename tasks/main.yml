@@ -1,8 +1,11 @@
 ---
 
+- name: Log into cluster
+  shell: 'oc login -u {{ user }} -p {{ password }} {{ cluster_url }}'
+
 - name: Check to see if there is openshift-compliance namespace
   shell: oc project openshift-compliance 
-  results: compliance_ns
+  register: compliance_ns
   failed_when: compliance_ns.rc == 2
 
 - name: Create openscap directory

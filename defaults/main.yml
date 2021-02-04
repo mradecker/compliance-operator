@@ -1,10 +1,21 @@
 ---
 
+
+# Set this option to yes if installing the operator from the package manifest that corresponds to the cat
+alog source
 catalog: yes
 
+# Set this option to yes if using git clone from the source code
 source: no
 
+# Set this option to yes if you want the role to import the scan tasks after installing the operator
 scan: no
+
+user: 
+
+password:
+
+cluster_url: 
 
 work_dir: $HOME/openscap
 

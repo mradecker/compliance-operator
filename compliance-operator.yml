@@ -1,5 +1,5 @@
 ---
 
-- hosts: '{{ utility }}'
+- hosts: bastion
   roles:
-  - '{{ work_dir }}/compliance-operator'
+  - $HOME/compliance-operator
