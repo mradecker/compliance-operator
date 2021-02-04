@@ -19,7 +19,6 @@ password: tUDow-2B3j2-QmhdX-LvESq
 cluster_url: https://api.ide.dpaas.dicelab.net:6443
 
 work_dir: /home/ec2-user/openscap
-scan: no
 
 user: 
 
