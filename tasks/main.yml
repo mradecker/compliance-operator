@@ -1,9 +1,9 @@
 ---
 
-- name: Check to see if compliance operator is installed
-  shell: oc get pod -n openshift-compliance | grep compliance-operator
-  results: compliance_operator
-  failed_when: compliance_operator.rc == 2
+- name: Check to see if there is openshift-compliance namespace
+  shell: oc project openshift-compliance 
+  results: compliance_ns
+  failed_when: compliance_ns.rc == 2
 
 - name: Create openscap directory
   file:
@@ -12,12 +12,13 @@
 
 - name: Create openshift-compliance namespace
   shell: oc new-project openshift-compliance
+  when: compliance_ns.rc == 1
 
 - import_tasks: catalog.yml
-  when: catalog | bool and compliance_operator.rc == 1
+  when: catalog | bool 
 
 - import_tasks: source.yml
-  when: source | bool and compliance_operator.rc == 1
+  when: source | bool 
 
 - import_tasks: scan.yml
   when: scan | bool

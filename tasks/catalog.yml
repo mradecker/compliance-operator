@@ -5,7 +5,7 @@
     path: '{{ work_dir }}/operator-group.yaml'
     state: touch
 
-- name: Create operator group
+- name: Add operator group definition 
   blockinfile:
     path: '{{ work_dir }}/operator-group.yaml' 
     block: | 
@@ -18,12 +18,15 @@
         targetNamespaces:
         - openshift-compliance
 
+- name: Create the operator group
+  shell: oc create -f '{{ work_dir }}/operator-group.yml'
+
 - name: Create subscription.yaml
   file: 
     path: '{{ work_dir }}/subscription.yaml'
     state: touch
 
-- name: Create subscription 
+- name: Add subscription definition
   blockinfile:
     path: '{{ work_dir }}/subscription.yaml'
     block: |
@@ -40,7 +43,8 @@
         # uncomment to specify a version
         #startingCSV: compliance-operator.v0.1.15
       
-
+- name: Create the subscription
+  shell: oc create -f '{{ work_dir }}/subscription.yml'
 
 
 
