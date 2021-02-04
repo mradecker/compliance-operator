@@ -1,12 +1,20 @@
 ---
 
+<<<<<<< HEAD
 # Set this option to yes if installing the operator from the package manifest that corresponds to the catalog source
 catalog: no
+=======
+
+# Set this option to yes if installing the operator from the package manifest that corresponds to the cat
+alog source
+catalog: yes
+>>>>>>> b1f9e4884ee7be861cfb5c7019c4b60e76f50ab5
 
 # Set this option to yes if using git clone from the source code
 source: no
 
 # Set this option to yes if you want the role to import the scan tasks after installing the operator
+<<<<<<< HEAD
 scan: yes
 
 # Set this option to yes to extract the results from node PVCs
@@ -19,6 +27,17 @@ password: tUDow-2B3j2-QmhdX-LvESq
 cluster_url: https://api.ide.dpaas.dicelab.net:6443
 
 work_dir: /home/ec2-user/openscap
+=======
+scan: no
+
+user: 
+
+password:
+
+cluster_url: 
+
+work_dir: $HOME/openscap
+>>>>>>> b1f9e4884ee7be861cfb5c7019c4b60e76f50ab5
 
 git_url: https://github.com/openshift/compliance-operator
 
