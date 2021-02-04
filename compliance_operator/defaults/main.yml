@@ -1,12 +1,12 @@
 ---
 
-olm: no
+catalog: yes
 
-source: yes
+source: no
 
 scan: no
 
-work_dir: /home/mradecke/compliance-operator/openscap
+work_dir: $HOME/openscap
 
 git_url: https://github.com/openshift/compliance-operator
 
@@ -15,8 +15,6 @@ namespace: openshift-compliance
 scan_name: nist-moderate
 
 scan_profile: ocp4-moderate
-
-pv_pod: pv-extract
 
 ubi8: registry.access.redhat.com/ubi8/ubi
 
