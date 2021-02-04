@@ -1,0 +1,23 @@
+---
+
+- name: Make openscap directory
+  file:
+    path: '{{ work_dir }}'
+    state: directory
+
+- name: Clone git repository
+  git:
+    repo: '{{ git_url }}'
+    dest: '{{ work_dir }}'
+    clone: yes
+
+- name: Create openshift-compliance namespace
+  shell: oc create -f deploy/ns.yaml
+
+- name: Create custom resource definitions
+  shell: for f in $(ls -1 deploy/crds/*crd.yaml); do oc apply -f $f -n {{ namespace }}; done
+
+- name: Create remaining objects
+  shell: oc apply -n {{ namespace }}  -f deploy/
+
+

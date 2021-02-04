@@ -1,0 +1,17 @@
+---
+
+- name: Check to see if compliance operator is installed
+  shell: oc get pod -n openshift-compliance | grep compliance-operator
+  results: compliance_operator
+  failed_when: compliance_operator.rc == 2
+
+- import_tasks: catalog.yml
+  when: catalog | bool and compliance_operator.rc == 1
+
+- import_tasks: source.yml
+  when: source | bool and compliance_operator.rc == 1
+
+- import_tasks: scan.yml
+  when: scan | bool
+
+
