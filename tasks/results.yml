@@ -39,6 +39,10 @@
   shell: oc get pods -n {{ namespace }} | grep master-pv-extract
   register: master_pv_pod
   failed_when: master_pv_pod.rc == 2
+  
+- name: Delete master-pv-extract if already running
+  shell: oc delete pod/master-pv-extract
+  when: master_pv_pod.rc == 0
 
 - name: Start master-pv-extract pod
   shell: oc create -n {{ namespace }} -f '{{ work_dir }}/master-pv-extract.yml'
@@ -87,6 +91,10 @@
   register: worker_pv_pod
   failed_when: worker_pv_pod.rc == 2
 
+- name: Delete worker-pv-extract pod if already running
+  shell: oc delete pod/worker-pv-extract
+  when: worker_pv_pod.rc == 0
+  
 - name: Start worker-pv-extract pod
   shell: oc create -n {{ namespace }} -f '{{ work_dir }}/worker-pv-extract.yml'
   when: worker_pv_pod.rc == 1
@@ -99,3 +107,4 @@
 - name: Copy results directory from worker-pv-extract pod
   shell: oc cp worker-pv-extract:/workers-scan-results '{{ work_dir }}/workers-scan-results/'
 
+- name: Move results to 
