@@ -11,7 +11,7 @@
     state: touch
   when: scansetting.rc == 1
 
-- name: Define the
+- name: Define the scansetting
   blockinfile:
     path: '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
     block: |
@@ -19,7 +19,7 @@
       kind: ScanSetting
       metadata:
         name: '{{ scan_setting }}'
-        namespace: openshift-compliance
+        namespace: '{{ namespace }}'
       rawResultStorage:
         rotation: 3
         size: 1Gi
@@ -30,7 +30,7 @@
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
         operator: Exists
-      schedule: '0 1 * * *'
+      schedule: '{{ cron_schedule }}'
   when: scansetting.rc == 1
   
 - name: Create the scansetting custom resource object
