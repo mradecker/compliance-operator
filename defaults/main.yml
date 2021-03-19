@@ -20,12 +20,6 @@ cluster_url: https://api.ide.dpaas.dicelab.net:6443
 
 work_dir: /home/ec2-user/openscap
 
-user: 
-
-password:
-
-cluster_url: 
-
 git_url: https://github.com/openshift/compliance-operator
 
 namespace: openshift-compliance
@@ -48,7 +42,7 @@ worker_results_dir: workers-scan-results
 
 master_results_dir: masters-scan-results
 
-catalog_source: redhat-operator-catalog
+catalog_source: custom-redhat-operator-catalog
 
 version: compliance-operator.v0.1.26
 
