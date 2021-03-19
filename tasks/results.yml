@@ -54,11 +54,11 @@
 
 - name: Create directory to hold master scan results
   file:
-    path: '{{ work_dir }}/masters-scan-results'
+    path: '{{ work_dir }}/{{ master_results_dir }}'
     state: directory
 
 - name: Copy results directory from master-pv-extract pod
-  shell: oc cp master-pv-extract:/masters-scan-results '{{ work_dir }}/{{ master_results_path }}/'
+  shell: oc cp master-pv-extract:/masters-scan-results '{{ work_dir }}/{{ master_results_dir }}/'
   
 - name: Create a backup directory to store previous results
   file:
@@ -67,12 +67,12 @@
 
 - name: Move previous master results to backup directory
   copy:
-    src: '{{ work_dir }}/{{ master_results_path }}/'
+    src: '{{ work_dir }}/{{ master_results_dir }}/'
     dest: '{{ work_dir }}/backup'
     
 - name: Cleanup master results directory
   file:
-    path: '{{ work_dir }}/{{ master_results_path }}/'
+    path: '{{ work_dir }}/{{ master_results_dir }}/'
     state: absent
 
 - name: Retrieve worker scan results from PVC
@@ -124,20 +124,20 @@
 
 - name: Create directory to hold worker scan results
   file:
-    path: '{{ work_dir }}/{{ worker_results_path }}'
+    path: '{{ work_dir }}/{{ worker_results_dir }}'
     state: directory
 
 - name: Copy results directory from worker-pv-extract pod
-  shell: oc cp worker-pv-extract:/workers-scan-results '{{ work_dir }}/{{ worker_results_path }}/'
+  shell: oc cp worker-pv-extract:/workers-scan-results '{{ work_dir }}/{{ worker_results_dir }}/'
 
 - name: Move previous worker results to backup directory
   copy:
-    src: '{{ work_dir }}/{{ worker_results_path }}/'
+    src: '{{ work_dir }}/{{ worker_results_dir }}/'
     dest: '{{ work_dir }}/backup'
     
 - name: Cleanup worker results directory
   file:
-    path: '{{ work_dir }}/{{ worker_results_path }}/'
+    path: '{{ work_dir }}/{{ worker_results_dir }}/'
     state: absent
   
   
