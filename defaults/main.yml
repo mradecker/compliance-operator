@@ -53,6 +53,8 @@ master_results_dir: masters-scan-results
 # Use the NAME of the catalog source.  Not the DISPLAY name.
 catalog_source: < your_catalog_source > 
 
+# Choose your starting Cluster Service Version (startingCSV) 
+# You can check the currentCSV with "oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml | grep currentCSV:"
 version: compliance-operator.v0.1.26
 
 
