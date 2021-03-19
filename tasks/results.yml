@@ -73,11 +73,6 @@
   copy:
     src: '{{ work_dir }}/{{ master_results_dir }}/'
     dest: '{{ work_dir }}/backup'
-    
-- name: Cleanup master results directory
-  file:
-    path: '{{ work_dir }}/{{ master_results_dir }}/'
-    state: absent
 
 - name: Retrieve worker scan results from PVC
   shell: oc get pvc -n {{ namespace }} | grep worker | awk '{print $1}'
@@ -143,9 +138,5 @@
     src: '{{ work_dir }}/{{ worker_results_dir }}/'
     dest: '{{ work_dir }}/backup'
     
-- name: Cleanup worker results directory
-  file:
-    path: '{{ work_dir }}/{{ worker_results_dir }}/'
-    state: absent
   
   
