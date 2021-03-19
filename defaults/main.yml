@@ -30,6 +30,10 @@ git_url: https://github.com/openshift/compliance-operator
 
 namespace: openshift-compliance
 
+scan_setting: custom
+
+cron_schedule: '0 1 * * *'
+
 scan_name: nist-moderate-nodes
 
 scan_profile: rhcos4-moderate
