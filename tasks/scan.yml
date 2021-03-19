@@ -50,7 +50,6 @@
   file:
     path: '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
     state: touch
-  when: scansettingbinding.rc == 1
 
 - name: Add content to scansettingbinding custom resource
   blockinfile:
@@ -68,7 +67,6 @@
         name: '{{ scan_setting }}'
         kind: ScanSetting
         apiGroup: compliance.openshift.io/v1alpha1
-  when: scansettingbinding.rc == 1
   
 - name: Wait for scan pods to terminate before creating a new scansettingbinding
   pause:
@@ -77,4 +75,3 @@
   
 - name: Start a scan by creating the scansettingbinding custom resource object
   shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
-  when: scansettingbinding.rc == 1
