@@ -2,7 +2,7 @@
   
 - name: Give time for scan pods to complete before extracting results
   pause:
-    minutes: 5
+    minutes: 6
   when: scan | bool
 
 - name: Retrieve master scan results from PVC
