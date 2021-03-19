@@ -15,13 +15,13 @@ scan: yes
 # Set this option to yes to extract the results from node PVCs
 results: no
 
-user: kubeadmin 
+user: < ocp_user >
 
-password: tUDow-2B3j2-QmhdX-LvESq 
+password: < ocp_password >
 
-cluster_url: https://api.ide.dpaas.dicelab.net:6443
+cluster_url: https://api.< cluster_domain >:6443
 
-work_dir: /home/ec2-user/openscap
+work_dir: < directory_for_all_artifacts >
 
 git_url: https://github.com/openshift/compliance-operator
 
@@ -29,10 +29,13 @@ namespace: openshift-compliance
 
 scan_setting: custom
 
+# Change this schedule to is best for your organization
 cron_schedule: '0 1 * * *'
 
+# Choose a name for your scan
 scan_name: nist-moderate-nodes
 
+# Choose a profile to use for your scans.  Check "oc get profiles.compliance" or the compliance operator github page for examples
 scan_profile: rhcos4-moderate
 
 ubi8: registry.access.redhat.com/ubi8/ubi
@@ -45,7 +48,9 @@ worker_results_dir: workers-scan-results
 
 master_results_dir: masters-scan-results
 
-catalog_source: custom-redhat-operator-catalog
+# Check which catalog source you are using with "oc get packagemanifests -n openshift-compliance" and "oc get catalog source" 
+# Use the NAME of the catalog source.  Not the DISPLAY name.
+catalog_source: < your_catalog_source > 
 
 version: compliance-operator.v0.1.26
 
