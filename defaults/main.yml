@@ -1,5 +1,8 @@
 ---
 
+# It is recommended to run the scan first, wait for all scan pods to complete, and re-run the playbook with ONLY the results boolean set to yes.
+# Running the scan and results playbooks together requires a pause for the scan pods to complete.  The pause of 360 seconds can cause the playbook to hang.
+
 # Set this option to yes if installing the operator from the package manifest that corresponds to the catalog source
 catalog: no
 
