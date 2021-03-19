@@ -1,4 +1,40 @@
 ---
+
+- name: Create a file for a ScanSetting resource
+  file:
+    path: '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
+    state: touch
+
+- name: Define the
+  blockinfile:
+    path: '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
+    block: |
+      apiVersion: compliance.openshift.io/v1alpha1
+      kind: ScanSetting
+      metadata:
+        name: '{{ scan_setting }}'
+        namespace: openshift-compliance
+      rawResultStorage:
+        rotation: 3
+        size: 1Gi
+      roles:
+      - worker
+      - master
+      scanTolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+      schedule: '0 1 * * *'
+
+- name: Check if the scansetting already exists
+  shell: oc get scansetting -n '{{ namespace }'} | grep '{{ scan_setting }}'
+  register: scansetting
+  failed_when: scansetting.rc == 2
+
+- name: Create the scansetting custom resource object
+  shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
+  when: scansetting.rc == 1
+
   
 - name: Create scansettingbinding custom resource file
   file:
@@ -12,15 +48,21 @@
       apiVersion: compliance.openshift.io/v1alpha1
       kind: ScanSettingBinding
       metadata:
-        name: {{ scan_name }}
+        name: '{{ scan_name }}'
       profiles:
-        - name: {{ scan_profile }}
+        - name: '{{ scan_profile }}'
           kind: Profile
           apiGroup: compliance.openshift.io/v1alpha1
       settingsRef:
-        name: default
+        name: '{{ scan_setting }}'
         kind: ScanSetting
         apiGroup: compliance.openshift.io/v1alpha1
 
+- name: Check if the scansettingbinding already exists
+  shell: oc get scansettingbinding -n '{{ namespace }'} | grep '{{ scan_name }}'
+  register: scansettingbinding
+  failed_when: scansettingbinding.rc == 2
+
 - name: Start a scan by creating the scansettingbinding custom resource object
-  shell: oc create -n {{ namespace }} -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
+  shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
+  when: scansettingbinding.rc == 1
