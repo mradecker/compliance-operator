@@ -1,9 +1,5 @@
 ---
 
-<<<<<<< HEAD
-- hosts: localhost
-=======
 - hosts: bastion
->>>>>>> b1f9e4884ee7be861cfb5c7019c4b60e76f50ab5
   roles:
   - $HOME/compliance-operator
