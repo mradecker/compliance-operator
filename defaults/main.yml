@@ -27,6 +27,7 @@ git_url: https://github.com/openshift/compliance-operator
 
 namespace: openshift-compliance
 
+# Choose a name for your scansetting resource
 scan_setting: custom
 
 # Change this schedule to is best for your organization
