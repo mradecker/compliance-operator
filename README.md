@@ -4,6 +4,10 @@ This role allows the user to install the Compliance Operator through a Catalog S
 
 In the defaults/main.yml, select which way you want to install the compliance operator by setting the boolean value to "yes/no" and setting the boolean for "scan" to "yes/no"
 
+Use the compliance-operator.yml file to run the playbook.  Ensure you have the correct host listed in this file.  Default is "bastion"
+
+  ex. ansible-playbook compliance-operator.yml -vv
+
 It is recommended to wait until the scan completes before trying to run the plays for results.  Sometimes the scan pods on the nodes take longer than expected or error out due to various issues.  This will cause the playbook to hang if trying to set both the "scan" and "results" booleans to "yes"
 
 After varifying that the scan completed properly and that there are PVCs for both master and worker scans, set the boolean for "scan" to "no" and the boolean for "results" to "yes" and re-run the playbook to automate the extraction of results xml files.  
