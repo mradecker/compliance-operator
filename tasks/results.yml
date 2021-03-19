@@ -43,10 +43,14 @@
 - name: Delete master-pv-extract if already running
   shell: oc delete pod/master-pv-extract
   when: master_pv_pod.rc == 0
+  
+- name: Pause to allow existing master-pv-extract pod termination
+  pause:
+    minutes: 1
+  when: master_pv_pod.rc == 0
 
 - name: Start master-pv-extract pod
   shell: oc create -n {{ namespace }} -f '{{ work_dir }}/master-pv-extract.yml'
-  when: master_pv_pod.rc == 1
   
 - name: Pause to allow master-pv-extract pod creation
   pause:
@@ -114,9 +118,13 @@
   shell: oc delete pod/worker-pv-extract
   when: worker_pv_pod.rc == 0
   
+- name: Pause to allow existing worker-pv-extract pod termination
+  pause:
+    minutes: 1
+  when: worker_pv_pod.rc == 0
+  
 - name: Start worker-pv-extract pod
   shell: oc create -n {{ namespace }} -f '{{ work_dir }}/worker-pv-extract.yml'
-  when: worker_pv_pod.rc == 1
 
 - name: Pause to allow worker-pv-extract pod creation
   pause:
