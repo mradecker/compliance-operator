@@ -71,7 +71,6 @@
 - name: Wait for scan pods to terminate before creating a new scansettingbinding
   pause:
     minutes: 1
-  when: scansettingbinding.rc == 0
   
 - name: Start a scan by creating the scansettingbinding custom resource object
   shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
