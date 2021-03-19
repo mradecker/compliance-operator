@@ -35,7 +35,9 @@
   
 - name: Create the scansetting custom resource object
   shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
-  when: scansetting.rc == 1
+  register: scansetting
+  failed_when: '"does not exist" in scansetting.stdout'
+
 
 - name: Check if the scansettingbinding already exists
   shell: oc get scansettingbinding -n '{{ namespace }}' | grep '{{ scan_name }}'
@@ -74,3 +76,5 @@
   
 - name: Start a scan by creating the scansettingbinding custom resource object
   shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
+  register: binding
+  failed_when: '"does not exist" in binding.stdout'
