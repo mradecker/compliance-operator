@@ -50,6 +50,6 @@ master_results_dir: masters-scan-results
 
 catalog_source: redhat-operator-catalog
 
-version: compliance-operator.v0.1.17
+version: compliance-operator.v0.1.26
 
 
