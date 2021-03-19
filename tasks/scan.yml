@@ -1,7 +1,7 @@
 ---
 
 - name: Check if the scansetting already exists
-  shell: oc get scansetting -n '{{ namespace }'} | grep '{{ scan_setting }}'
+  shell: oc get scansetting -n '{{ namespace }}' | grep '{{ scan_setting }}'
   register: scansetting
   failed_when: scansetting.rc == 2
 
