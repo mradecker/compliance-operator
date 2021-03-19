@@ -47,6 +47,10 @@
 - name: Start master-pv-extract pod
   shell: oc create -n {{ namespace }} -f '{{ work_dir }}/master-pv-extract.yml'
   when: master_pv_pod.rc == 1
+  
+- name: Pause to allow master-pv-extract pod creation
+  pause:
+    minutes: 1
 
 - name: Create directory to hold master scan results
   file:
@@ -113,6 +117,10 @@
 - name: Start worker-pv-extract pod
   shell: oc create -n {{ namespace }} -f '{{ work_dir }}/worker-pv-extract.yml'
   when: worker_pv_pod.rc == 1
+
+- name: Pause to allow worker-pv-extract pod creation
+  pause:
+    minutes: 1
 
 - name: Create directory to hold worker scan results
   file:
