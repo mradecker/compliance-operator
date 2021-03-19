@@ -12,4 +12,8 @@ It is recommended to wait until the scan completes before trying to run the play
 
 After varifying that the scan completed properly and that there are PVCs for both master and worker scans, set the boolean for "scan" to "no" and the boolean for "results" to "yes" and re-run the playbook to automate the extraction of results xml files.  
 
-If you DO NOT need the XML files for viewing, you do not need to run the results playbook.  In OpenShift, after the scan completes, run "oc get complianceremediations" to see what remediation options there are.  After deciding which remediations need to be applied, go into the remediation by typing "oc edit compliancerememdiation <name of remediation>" and set the Apply boolean to "yes" which will result in the machineconfig applying the changes and rebooting the nodes
+If you DO NOT need the XML files for viewing, you do not need to run the results playbook.  
+
+In OpenShift, after the scan completes, run "oc get complianceremediations" to see what remediation options there are.  
+
+After deciding which remediations need to be applied, go into the remediation by typing "oc edit compliancerememdiation <name of remediation>" and set the Apply boolean to "yes" which will result in the machineconfig applying the changes and rebooting the nodes
