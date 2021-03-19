@@ -38,7 +38,7 @@
   when: scansetting.rc == 1
 
 - name: Check if the scansettingbinding already exists
-  shell: oc get scansettingbinding -n '{{ namespace }'} | grep '{{ scan_name }}'
+  shell: oc get scansettingbinding -n '{{ namespace }}' | grep '{{ scan_name }}'
   register: scansettingbinding
   failed_when: scansettingbinding.rc == 2
   
