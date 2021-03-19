@@ -1,9 +1,15 @@
 ---
 
+- name: Check if the scansetting already exists
+  shell: oc get scansetting -n '{{ namespace }'} | grep '{{ scan_setting }}'
+  register: scansetting
+  failed_when: scansetting.rc == 2
+
 - name: Create a file for a ScanSetting resource
   file:
     path: '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
     state: touch
+  when: scansetting.rc == 1
 
 - name: Define the
   blockinfile:
@@ -25,21 +31,26 @@
         key: node-role.kubernetes.io/master
         operator: Exists
       schedule: '0 1 * * *'
-
-- name: Check if the scansetting already exists
-  shell: oc get scansetting -n '{{ namespace }'} | grep '{{ scan_setting }}'
-  register: scansetting
-  failed_when: scansetting.rc == 2
-
+  when: scansetting.rc == 1
+  
 - name: Create the scansetting custom resource object
   shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
   when: scansetting.rc == 1
 
+- name: Check if the scansettingbinding already exists
+  shell: oc get scansettingbinding -n '{{ namespace }'} | grep '{{ scan_name }}'
+  register: scansettingbinding
+  failed_when: scansettingbinding.rc == 2
+  
+- name: Delete scansettingbinding if it exists
+  shell: 'oc delete scansettingbinding/{{ scan_name }}'
+  when: scansettingbinding.rc == 0
   
 - name: Create scansettingbinding custom resource file
   file:
     path: '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
     state: touch
+  when: scansettingbinding.rc == 1
 
 - name: Add content to scansettingbinding custom resource
   blockinfile:
@@ -57,12 +68,13 @@
         name: '{{ scan_setting }}'
         kind: ScanSetting
         apiGroup: compliance.openshift.io/v1alpha1
-
-- name: Check if the scansettingbinding already exists
-  shell: oc get scansettingbinding -n '{{ namespace }'} | grep '{{ scan_name }}'
-  register: scansettingbinding
-  failed_when: scansettingbinding.rc == 2
-
+  when: scansettingbinding.rc == 1
+  
+- name: Wait for scan pods to terminate before creating a new scansettingbinding
+  pause:
+    minutes: 1
+  when: scansettingbinding.rc == 0
+  
 - name: Start a scan by creating the scansettingbinding custom resource object
   shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
   when: scansettingbinding.rc == 1
