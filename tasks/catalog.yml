@@ -20,7 +20,8 @@
 
 - name: Create the operator group
   shell: oc create -f '{{ work_dir }}/operator-group.yaml'
-  ignore_errors: yes
+  register: operator_group
+  failed_when: '"does not exist" in operator_group.stdout'
 
 - name: Create subscription.yaml
   file: 
@@ -46,6 +47,7 @@
       
 - name: Create the subscription
   shell: oc create -f '{{ work_dir }}/subscription.yaml'
-  ignore_errors: yes
+  register: subscription
+  failed_when: '"does not exist" in subscription.stdout'
 
 
