@@ -12,12 +12,8 @@ source: no
 # Set this option to yes if you want the role to import the scan tasks after installing the operator
 scan: yes
 
-# Set this option to yes to extract the results from node PVCs
+# Set this option to yes only if you need to extract the XML results from node PVCs
 results: no
-
-user: < ocp_user >
-
-password: < ocp_password >
 
 cluster_url: https://api.< cluster_domain >:6443
 
