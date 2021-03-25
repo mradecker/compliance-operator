@@ -1,8 +1,5 @@
 ---
 
-- name: Log into cluster
-  shell: 'oc login -u {{ user }} -p {{ password }} {{ cluster_url }}'
-
 - name: Check to see if there is an openshift-compliance namespace
   shell: 'oc create ns {{ namespace }}' 
   register: compliance_ns
