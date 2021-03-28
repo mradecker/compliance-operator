@@ -149,6 +149,17 @@
 - name: Get compliance check results for workers
   shell: oc get ccr | grep worker > '{{ work_dir }}/{{ worker_results_dir }}/worker_ccr.txt'
 
+- name: Delete master-pv-extract pod
+  shell: oc delete pod/master-pv-extract
+  
+- name: Delete worker-pv-extract pod
+  shell: oc delete pod/worker-pv-extract
+  
+- name: Delete master results pvc
+  shell: oc delete pvc '{{ master_results.stdout }}'
+  
+- name: Delete worker results pvc
+  shell: oc delete pvc '{{ worker_results.stdout }}'
     
   
   
