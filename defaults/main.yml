@@ -30,10 +30,13 @@ scan_setting: custom
 cron_schedule: '0 1 * * *'
 
 # Choose a name for your scan
-scan_name: nist-moderate-nodes
+scan_name: nist-moderate
 
-# Choose a profile to use for your scans.  Check "oc get profiles.compliance" or the compliance operator github page for examples
-scan_profile: rhcos4-moderate
+# Choose a profile to use for your node scans. ( rhcos4-e8, rhcos4-moderate )   
+node_scan_profile: rhcos4-moderate
+
+# Choose a profile to use for your platform scans. ( ocp4-cis, ocp4-cis-node, ocp4-e8, ocp4-moderate ) 
+platform_scan_profile: ocp4-moderate
 
 ubi8: registry.access.redhat.com/ubi8/ubi
 
