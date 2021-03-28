@@ -32,9 +32,7 @@
         operator: Exists
       - effect: NoSchedule
         Key: node-role.kubernetes.io/infra
-        operator: Exists
-
-      
+        operator: Exists      
       schedule: '{{ cron_schedule }}'
   when: scansetting.rc == 1
   
