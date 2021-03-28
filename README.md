@@ -12,10 +12,9 @@ Use the compliance-operator.yml file to run the playbook.  Ensure you have the c
 
 It is recommended to wait until the scan completes before trying to run the plays for results.  Sometimes the scan pods on the nodes take longer than expected or error out due to various issues.  This will cause the playbook to hang if trying to set both the "scan" and "results" booleans to "yes"
 
-After varifying that the scan completed properly and that there are PVCs for both master and worker scans, set the boolean for "scan" to "no" and the boolean for "results" to "yes" and re-run the playbook to automate the extraction of results xml files.  
+After varifying that the scan completed properly and that there are PVCs for both master and worker scans, set the boolean for "scan" to "no" and the boolean for "results" to "yes" and re-run the playbook to automate the extraction of results xml files and get Compliance Check Results.  
 
-If you DO NOT need the XML files for viewing, you do not need to run the "results" playbook.  
 
-In OpenShift, after the scan completes, run "oc get complianceremediations" to see what remediation options there are.  
+In OpenShift, after the scan completes and results are checked, run "oc get complianceremediations" to see what remediation options there are.  
 
 After deciding which remediations need to be applied, go into the remediation by typing "oc edit compliancerememdiation <name of remediation>" and set the Apply boolean to "yes" which will result in the machineconfig applying the changes and rebooting the nodes
