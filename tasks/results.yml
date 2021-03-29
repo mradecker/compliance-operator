@@ -149,17 +149,97 @@
 - name: Get compliance check results for workers
   shell: oc get ccr | grep worker > '{{ work_dir }}/{{ worker_results_dir }}/worker_ccr.txt'
 
+
+
+### Extraction of platform Compliance Check Results and XML files
+
+- name: Create directory to hold ocp4 scan results
+  file:
+    path: '{{ work_dir }}/{{ ocp4_results_dir }}'
+    state: directory
+
+- name: Move previous ocp4 results to backup directory
+  copy:
+    src: '{{ work_dir }}/{{ ocp4_results_dir }}/'
+    dest: '{{ work_dir }}/backup'
+
+- name: Retrieve ocp4 scan results from PVC
+  shell: oc get pvc -n {{ namespace }} | grep ocp4 | awk '{print $1}'
+  register: ocp4_results
+
+- name: Create ocp4-pv-extract.yml
+  file:
+    path: '{{ work_dir }}/ocp4-pv-extract.yml'
+    state: touch
+
+- name: Add content to ocp4-pv-extract.yml
+  blockinfile:
+    path: '{{ work_dir }}/ocp4-pv-extract.yml'
+    block: |
+      apiVersion: "v1"
+      kind: Pod
+      metadata:
+        name: ocp4-pv-extract
+      spec:
+        containers:
+        - name: ocp4-pv-extract
+          image: registry.access.redhat.com/ubi8/ubi
+          command: ["sleep", "3000"]
+          volumeMounts:
+            - mountPath: '{{ ocp4_results_path }}'
+              name: ocp4-scan-vol
+        volumes:
+        - name: ocp4-scan-vol
+          persistentVolumeClaim:
+            claimName: '{{ ocp4_results.stdout }}'
+
+- name: Check if ocp4-pv-extract pod is already running
+  shell: oc get pods -n {{ namespace }} | grep ocp4-pv-extract
+  register: ocp4_pv_pod
+  failed_when: ocp4_pv_pod.rc == 2
+
+- name: Delete ocp4-pv-extract pod if already running
+  shell: oc delete pod/ocp4-pv-extract
+  when: ocp4_pv_pod.rc == 0
+
+- name: Pause to allow existing ocp4-pv-extract pod termination
+  pause:
+    minutes: 1
+  when: ocp4_pv_pod.rc == 0
+
+- name: Start ocp4-pv-extract pod
+  shell: oc create -n {{ namespace }} -f '{{ work_dir }}/ocp4-pv-extract.yml'
+
+- name: Pause to allow ocp4-pv-extract pod creation
+  pause:
+    minutes: 1
+
+- name: Copy XML results directory from worker-pv-extract pod
+  shell: oc cp ocp4-pv-extract:/ocp4-scan-results '{{ work_dir }}/{{ ocp4_results_dir }}/'
+
+- name: Get compliance check results for workers
+  shell: oc get ccr | grep ocp4 > '{{ work_dir }}/{{ ocp4_results_dir }}/ocp4_ccr.txt'
+
+
+
+### Clean up pv-extract pods and PVCs
+
 - name: Delete master-pv-extract pod
   shell: oc delete pod/master-pv-extract
   
 - name: Delete worker-pv-extract pod
   shell: oc delete pod/worker-pv-extract
-  
+
+- name: Delete ocp4-pv-extract pod
+  shell: oc delete pod/ocp4-pv-extract
+
 - name: Delete master results pvc
   shell: oc delete pvc '{{ master_results.stdout }}'
   
 - name: Delete worker results pvc
   shell: oc delete pvc '{{ worker_results.stdout }}'
     
-  
+- name: Delete ocp4 results pvc
+  shell: oc delete pvc '{{ ocp4_results.stdout }}'
+ 
   
