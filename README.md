@@ -8,6 +8,8 @@ Make sure you are logged into the OpenShift cluster with the appropriate credent
 
 In the defaults/main.yml, select which way you want to install the compliance operator by setting the boolean value to "yes/no" and setting the boolean for "scan" to "yes/no"
 
+Go through the list of variables and make sure everything is defined before running the playbook.
+
 Use the compliance-operator.yml file to run the playbook.  Ensure you have the correct host listed in this file.  Default is "bastion"
 
   ex. ansible-playbook compliance-operator.yml -vv
