@@ -48,6 +48,11 @@ worker_results_dir: workers-scan-results
 
 master_results_dir: masters-scan-results
 
+ocp4_results_path: /ocp4-scan-results
+
+ocp4_results_dir: ocp4-scan-results
+
+
 # Check which catalog source you are using with "oc get packagemanifests -n openshift-compliance" and "oc get catalog source" 
 # Use the NAME of the catalog source.  Not the DISPLAY name.
 catalog_source: < your_catalog_source > 
