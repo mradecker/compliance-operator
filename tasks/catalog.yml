@@ -44,7 +44,7 @@
         source: '{{ catalog_source }}'
         sourceNamespace: openshift-marketplace
         # uncomment to specify a version
-        startingCSV: '{{ version }}' 
+        #startingCSV: '{{ version }}' 
       
 - name: Create the subscription
   shell: oc create -f '{{ work_dir }}/subscription.yaml'
