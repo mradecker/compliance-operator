@@ -38,9 +38,10 @@
         name: compliance-operator-sub
         namespace: '{{ namespace }}'
       spec:
-        channel: alpha
+        channel: '{{ channel_version }}'
+        installPlanApproval: Automatic
         name: compliance-operator
-        source: {{ catalog_source }}
+        source: '{{ catalog_source }}'
         sourceNamespace: openshift-marketplace
         # uncomment to specify a version
         startingCSV: '{{ version }}' 
