@@ -13,11 +13,8 @@
     path: '{{ work_dir }}'
     state: directory
 
-- import_tasks: catalog.yml
-  when: catalog | bool 
-
-- import_tasks: source.yml
-  when: source | bool 
+- import_tasks: install_operator.yml
+  when: install_operator | bool 
 
 - import_tasks: scan.yml
   when: scan | bool
