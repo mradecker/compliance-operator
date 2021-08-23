@@ -6,9 +6,6 @@
 # Set this option to yes if installing the operator from the package manifest that corresponds to the catalog source
 catalog: no
 
-# Set this option to yes if using git clone from the source code
-source: no
-
 # Set this option to yes if you want the role to import the scan tasks after installing the operator
 scan: yes
 
