@@ -2,7 +2,7 @@
 
 - name: Create operator group 
   k8s:
-    apply: true
+    apply: yes
     definition: 
       apiVersion: operators.coreos.com/v1
       kind: OperatorGroup
@@ -16,7 +16,7 @@
 
 - name: Create subscription for compliance operator 
   k8s:
-    apply: true
+    apply: yes
     definition:
       apiVersion: operators.coreos.com/v1alpha1
       kind: Subscription
