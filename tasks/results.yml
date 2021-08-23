@@ -25,16 +25,25 @@
 - name: Retrieve master scan results from PVC
   shell: oc get pvc -n {{ namespace}} | grep master | awk '{print $1}'
   register: master_results
+            
+- name: Check if master-pv-extract pod is already running
+  shell: oc get pods -n {{ namespace }} | grep master-pv-extract
+  register: master_pv_pod
+  failed_when: master_pv_pod.rc == 2
+  
+- name: Delete master-pv-extract if already running
+  shell: oc delete pod/master-pv-extract
+  when: master_pv_pod.rc == 0
+  
+- name: Pause to allow existing master-pv-extract pod termination
+  pause:
+    minutes: 1
+  when: master_pv_pod.rc == 0
 
-- name: Create master-pv-extract.yml
-  file:
-    path: '{{ work_dir }}/master-pv-extract.yml'
-    state: touch
-
-- name: Add content to master-pv-extract.yml
-  blockinfile:
-    path: '{{ work_dir }}/master-pv-extract.yml'
-    block: |
+- name: Create master-pv-extract pod
+  k8s:
+    state: present
+    definition:
       apiVersion: "v1"
       kind: Pod
       metadata:
@@ -51,23 +60,6 @@
         - name: masters-scan-vol
           persistentVolumeClaim:
             claimName: '{{ master_results.stdout }}'
-            
-- name: Check if master-pv-extract pod is already running
-  shell: oc get pods -n {{ namespace }} | grep master-pv-extract
-  register: master_pv_pod
-  failed_when: master_pv_pod.rc == 2
-  
-- name: Delete master-pv-extract if already running
-  shell: oc delete pod/master-pv-extract
-  when: master_pv_pod.rc == 0
-  
-- name: Pause to allow existing master-pv-extract pod termination
-  pause:
-    minutes: 1
-  when: master_pv_pod.rc == 0
-
-- name: Start master-pv-extract pod
-  shell: oc create -n {{ namespace }} -f '{{ work_dir }}/master-pv-extract.yml'
   
 - name: Pause to allow master-pv-extract pod creation
   pause:
@@ -96,15 +88,24 @@
   shell: oc get pvc -n {{ namespace }} | grep worker | awk '{print $1}'
   register: worker_results
 
-- name: Create worker-pv-extract.yml
-  file:
-    path: '{{ work_dir }}/worker-pv-extract.yml'
-    state: touch
+- name: Check if worker-pv-extract pod is already running
+  shell: oc get pods -n {{ namespace }} | grep worker-pv-extract
+  register: worker_pv_pod
+  failed_when: worker_pv_pod.rc == 2
 
-- name: Add content to worker-pv-extract.yml
-  blockinfile:
-    path: '{{ work_dir }}/worker-pv-extract.yml'
-    block: |
+- name: Delete worker-pv-extract pod if already running
+  shell: oc delete pod/worker-pv-extract
+  when: worker_pv_pod.rc == 0
+  
+- name: Pause to allow existing worker-pv-extract pod termination
+  pause:
+    minutes: 1
+  when: worker_pv_pod.rc == 0
+  
+- name: Create worker-pv-extract pod
+  k8s:
+    state: present
+    definition:
       apiVersion: "v1"
       kind: Pod
       metadata:
@@ -121,23 +122,6 @@
         - name: workers-scan-vol
           persistentVolumeClaim:
             claimName: '{{ worker_results.stdout }}'
-
-- name: Check if worker-pv-extract pod is already running
-  shell: oc get pods -n {{ namespace }} | grep worker-pv-extract
-  register: worker_pv_pod
-  failed_when: worker_pv_pod.rc == 2
-
-- name: Delete worker-pv-extract pod if already running
-  shell: oc delete pod/worker-pv-extract
-  when: worker_pv_pod.rc == 0
-  
-- name: Pause to allow existing worker-pv-extract pod termination
-  pause:
-    minutes: 1
-  when: worker_pv_pod.rc == 0
-  
-- name: Start worker-pv-extract pod
-  shell: oc create -n {{ namespace }} -f '{{ work_dir }}/worker-pv-extract.yml'
 
 - name: Pause to allow worker-pv-extract pod creation
   pause:
@@ -167,15 +151,24 @@
   shell: oc get pvc -n {{ namespace }} | grep ocp4 | awk '{print $1}'
   register: ocp4_results
 
-- name: Create ocp4-pv-extract.yml
-  file:
-    path: '{{ work_dir }}/ocp4-pv-extract.yml'
-    state: touch
+- name: Check if ocp4-pv-extract pod is already running
+  shell: oc get pods -n {{ namespace }} | grep ocp4-pv-extract
+  register: ocp4_pv_pod
+  failed_when: ocp4_pv_pod.rc == 2
 
-- name: Add content to ocp4-pv-extract.yml
-  blockinfile:
-    path: '{{ work_dir }}/ocp4-pv-extract.yml'
-    block: |
+- name: Delete ocp4-pv-extract pod if already running
+  shell: oc delete pod/ocp4-pv-extract
+  when: ocp4_pv_pod.rc == 0
+
+- name: Pause to allow existing ocp4-pv-extract pod termination
+  pause:
+    minutes: 1
+  when: ocp4_pv_pod.rc == 0
+
+- name: Create ocp4-pv-extract pod
+  k8s:
+    state: present
+    definition:
       apiVersion: "v1"
       kind: Pod
       metadata:
@@ -192,23 +185,6 @@
         - name: ocp4-scan-vol
           persistentVolumeClaim:
             claimName: '{{ ocp4_results.stdout }}'
-
-- name: Check if ocp4-pv-extract pod is already running
-  shell: oc get pods -n {{ namespace }} | grep ocp4-pv-extract
-  register: ocp4_pv_pod
-  failed_when: ocp4_pv_pod.rc == 2
-
-- name: Delete ocp4-pv-extract pod if already running
-  shell: oc delete pod/ocp4-pv-extract
-  when: ocp4_pv_pod.rc == 0
-
-- name: Pause to allow existing ocp4-pv-extract pod termination
-  pause:
-    minutes: 1
-  when: ocp4_pv_pod.rc == 0
-
-- name: Start ocp4-pv-extract pod
-  shell: oc create -n {{ namespace }} -f '{{ work_dir }}/ocp4-pv-extract.yml'
 
 - name: Pause to allow ocp4-pv-extract pod creation
   pause:
