@@ -1,20 +1,9 @@
 ---
 
-- name: Check if the scansetting already exists
-  shell: oc get scansetting -n '{{ namespace }}' | grep '{{ scan_setting }}'
-  register: scansetting
-  failed_when: scansetting.rc == 2
-
-- name: Create a file for a ScanSetting resource
-  file:
-    path: '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
-    state: touch
-  when: scansetting.rc == 1
-
 - name: Define the scansetting
-  blockinfile:
-    path: '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
-    block: |
+  k8s:
+    apply: yes
+    definition:
       apiVersion: compliance.openshift.io/v1alpha1
       kind: ScanSetting
       metadata:
@@ -33,12 +22,7 @@
       - effect: NoSchedule
         operator: Exists      
       schedule: '{{ cron_schedule }}'
-  when: scansetting.rc == 1
   
-- name: Create the scansetting custom resource object
-  shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_setting }}_scansetting_cr.yaml'
-  register: scansetting
-  failed_when: '"does not exist" in scansetting.stdout'
 
 - name: Check if the scansettingbinding already exists
   shell: oc get scansettingbinding -n '{{ namespace }}' | grep '{{ scan_name }}'
@@ -49,15 +33,15 @@
   shell: 'oc delete scansettingbinding/{{ scan_name }}'
   when: scansettingbinding.rc == 0
   
-- name: Create scansettingbinding custom resource file
-  file:
-    path: '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
-    state: touch
+- name: Wait for scan pods to terminate before creating a new scansettingbinding
+  pause:
+    minutes: 1
+  when: scansettingbinding.rc == 0
 
-- name: Add content to scansettingbinding custom resource
-  blockinfile:
-    path: '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
-    block: |
+- name: Create the scansettingbinding custom resource
+  k8s:
+    state: present
+    definition:
       apiVersion: compliance.openshift.io/v1alpha1
       kind: ScanSettingBinding
       metadata:
@@ -74,12 +58,6 @@
         kind: ScanSetting
         apiGroup: compliance.openshift.io/v1alpha1
   
-- name: Wait for scan pods to terminate before creating a new scansettingbinding
-  pause:
-    minutes: 1
-  when: scansettingbinding.rc == 0
+
   
-- name: Start a scan by creating the scansettingbinding custom resource object
-  shell: oc create -n '{{ namespace }}' -f '{{ work_dir }}/{{ scan_name }}_scansettingbinding_cr.yaml'
-  register: binding
-  failed_when: '"does not exist" in binding.stdout'
+
