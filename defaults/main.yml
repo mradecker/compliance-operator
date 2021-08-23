@@ -4,7 +4,7 @@
 # Running the scan and results playbooks together requires a pause for the scan pods to complete.  The pause of 360 seconds can cause the playbook to hang.
 
 # Set this option to yes if installing the operator from the package manifest that corresponds to the catalog source
-catalog: no
+install_operator: no
 
 # Set this option to yes if you want the role to import the scan tasks after installing the operator
 scan: yes
