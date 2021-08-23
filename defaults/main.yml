@@ -58,7 +58,7 @@ ocp4_results_dir: ocp4-scan-results
 catalog_source: < your_catalog_source > 
 
 # Specify the channel version/name in the subscription.  This can be found in 'oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml'
-channel_version: 4.7
+channel_version: 4.8
 
 # Choose your starting Cluster Service Version (startingCSV) 
 # You can check the currentCSV with "oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml | grep currentCSV:"
