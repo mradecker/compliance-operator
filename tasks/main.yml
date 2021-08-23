@@ -1,15 +1,12 @@
 ---
 
-- name: Check to see if there is an openshift-compliance namespace
-  shell: 'oc create ns {{ namespace }}' 
-  register: compliance_ns
-  failed_when: compliance_ns.rc == 2
-
-- name: Create openshift-compliance namespace
-  shell: 'oc create ns {{ namespace }}'
-  register: create_ns
-  when: compliance_ns.rc == 1
-  failed_when: create_ns.rc == 2
+- name: Create the openshift-compliance namespace
+  k8s:
+    apply: yes
+    definition:
+      api_version: v1
+      kind: Namespace
+      name: openshift-compliance
 
 - name: Create openscap directory
   file:
