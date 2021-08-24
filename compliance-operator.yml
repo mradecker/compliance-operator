@@ -2,4 +2,5 @@
 
 - hosts: bastion
   roles:
-  - $HOME/compliance-operator
+  - compliance-operator
+  #Update the path to this role if needed
