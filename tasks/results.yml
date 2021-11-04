@@ -2,7 +2,7 @@
   
 - name: Check to see if the scan completed
   k8s_info:
-    kind: ComplianceScan
+    kind: ComplianceSuite
     namespace: openshift-compliance
     field_selectors:
       - status.phase=DONE
