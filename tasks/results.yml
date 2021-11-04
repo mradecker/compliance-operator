@@ -1,9 +1,12 @@
 ---
   
-- name: Give time for scan pods to complete before extracting results
-  pause:
-    minutes: 6
-  when: scan | bool
+- name: Check to see if the scan completed
+  k8s_info:
+    kind: ComplianceScan
+    namespace: openshift-compliance
+    field_selectors:
+      - status.phase=DONE
+  register: scan_status
   
 ### Extraction of master Compliance Check Results and XML files
   
@@ -11,6 +14,7 @@
   file:
     path: '{{ work_dir }}/{{ master_results_dir }}'
     state: directory
+  when: scan_status.rc == 0
 
 - name: Create a backup directory to store previous results
   file:
@@ -134,7 +138,6 @@
   shell: oc get ccr | grep worker > '{{ work_dir }}/{{ worker_results_dir }}/worker_ccr.txt'
 
 
-
 ### Extraction of platform Compliance Check Results and XML files
 
 - name: Create directory to hold ocp4 scan results
@@ -195,7 +198,6 @@
 
 - name: Get compliance check results for workers
   shell: oc get ccr | grep ocp4 > '{{ work_dir }}/{{ ocp4_results_dir }}/ocp4_ccr.txt'
-
 
 
 ### Clean up pv-extract pods and PVCs
