@@ -9,7 +9,7 @@ install_operator: no
 # Set this option to yes if you want the role to import the scan tasks after installing the operator
 scan: yes
 
-# Run this after scans have completed!  Set this option to run Compliance Check Results task and to extract the XML results from node PVCs
+# Set this option to run Compliance Check Results task and to extract the XML results from node PVCs. 
 results: no
 
 cluster_url: https://api.< cluster_domain >:6443
