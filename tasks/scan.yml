@@ -24,20 +24,12 @@
         operator: Exists
       schedule: '{{ cron_schedule }}'
   
-
-- name: Check if the scansettingbinding already exists
-  shell: oc get scansettingbinding -n '{{ namespace }}' | grep '{{ scan_name }}'
-  register: scansettingbinding
-  failed_when: scansettingbinding.rc == 2
-  
-- name: Delete scansettingbinding if it exists
-  shell: 'oc delete scansettingbinding/{{ scan_name }}'
-  when: scansettingbinding.rc == 0
-  
-- name: Wait for scan pods to terminate before creating a new scansettingbinding
-  pause:
-    minutes: 1
-  when: scansettingbinding.rc == 0
+- name: Remove any existing ScanSettingBinding objects
+  k8s:
+    state: absent
+    api_version: compliance.openshift.io/v1alpha1
+    kind: ScanSettingBinding
+    namespace: openshift-compliance
 
 - name: Create the scansettingbinding custom resource
   k8s:
