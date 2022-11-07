@@ -1,6 +1,6 @@
 ---
 
-- name: Define the scansetting
+- name: Define the ScanSetting
   k8s:
     apply: yes
     definition:
@@ -31,7 +31,7 @@
     kind: ScanSettingBinding
     namespace: openshift-compliance
 
-- name: Create the scansettingbinding custom resource
+- name: Create the ScanSettingBinding custom resource
   k8s:
     state: present
     definition:
