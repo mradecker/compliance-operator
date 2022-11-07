@@ -29,20 +29,6 @@
 - name: Retrieve master scan results from PVC
   shell: oc get pvc -n {{ namespace}} | grep master | awk '{print $1}'
   register: master_results
-            
-- name: Check if master-pv-extract pod is already running
-  shell: oc get pods -n {{ namespace }} | grep master-pv-extract
-  register: master_pv_pod
-  failed_when: master_pv_pod.rc == 2
-  
-- name: Delete master-pv-extract if already running
-  shell: oc delete pod/master-pv-extract
-  when: master_pv_pod.rc == 0
-  
-- name: Pause to allow existing master-pv-extract pod termination
-  pause:
-    minutes: 1
-  when: master_pv_pod.rc == 0
 
 - name: Create master-pv-extract pod
   k8s:
@@ -65,9 +51,13 @@
           persistentVolumeClaim:
             claimName: '{{ master_results.stdout }}'
   
-- name: Pause to allow master-pv-extract pod creation
-  pause:
-    minutes: 1
+- name: Wait for  master-pv-extract pod creation
+  k8s_info:
+    kind: Pod
+    Name: master-pv-extract
+    namespace: openshift-compliance
+    wait: yes
+    wait_sleep: 10
 
 - name: Copy XML results directory from master-pv-extract pod
   shell: oc cp master-pv-extract:/masters-scan-results '{{ work_dir }}/{{ master_results_dir }}/'
@@ -91,20 +81,6 @@
 - name: Retrieve worker scan results from PVC
   shell: oc get pvc -n {{ namespace }} | grep worker | awk '{print $1}'
   register: worker_results
-
-- name: Check if worker-pv-extract pod is already running
-  shell: oc get pods -n {{ namespace }} | grep worker-pv-extract
-  register: worker_pv_pod
-  failed_when: worker_pv_pod.rc == 2
-
-- name: Delete worker-pv-extract pod if already running
-  shell: oc delete pod/worker-pv-extract
-  when: worker_pv_pod.rc == 0
-  
-- name: Pause to allow existing worker-pv-extract pod termination
-  pause:
-    minutes: 1
-  when: worker_pv_pod.rc == 0
   
 - name: Create worker-pv-extract pod
   k8s:
@@ -128,8 +104,12 @@
             claimName: '{{ worker_results.stdout }}'
 
 - name: Pause to allow worker-pv-extract pod creation
-  pause:
-    minutes: 1
+  k8s_info:
+    kind: Pod
+    name: worker-pv-extract
+    namespace: openshift-compliance
+    wait: yes
+    wait_sleep: 10
 
 - name: Copy XML results directory from worker-pv-extract pod
   shell: oc cp worker-pv-extract:/workers-scan-results '{{ work_dir }}/{{ worker_results_dir }}/'
@@ -154,20 +134,6 @@
   shell: oc get pvc -n {{ namespace }} | grep ocp4 | awk '{print $1}'
   register: ocp4_results
 
-- name: Check if ocp4-pv-extract pod is already running
-  shell: oc get pods -n {{ namespace }} | grep ocp4-pv-extract
-  register: ocp4_pv_pod
-  failed_when: ocp4_pv_pod.rc == 2
-
-- name: Delete ocp4-pv-extract pod if already running
-  shell: oc delete pod/ocp4-pv-extract
-  when: ocp4_pv_pod.rc == 0
-
-- name: Pause to allow existing ocp4-pv-extract pod termination
-  pause:
-    minutes: 1
-  when: ocp4_pv_pod.rc == 0
-
 - name: Create ocp4-pv-extract pod
   k8s:
     state: present
@@ -189,9 +155,14 @@
           persistentVolumeClaim:
             claimName: '{{ ocp4_results.stdout }}'
 
-- name: Pause to allow ocp4-pv-extract pod creation
-  pause:
-    minutes: 1
+- name: Wait for ocp4-pv-extract pod creation
+  k8s_info:
+    kind: Pod
+    name: ocp4-pv-extract
+    namespace: openshift-compliance
+    wait: yes
+    wait_sleep: 10
+
 
 - name: Copy XML results directory from worker-pv-extract pod
   shell: oc cp ocp4-pv-extract:/ocp4-scan-results '{{ work_dir }}/{{ ocp4_results_dir }}/'
@@ -203,21 +174,55 @@
 ### Clean up pv-extract pods and PVCs
 
 - name: Delete master-pv-extract pod
-  shell: oc delete pod/master-pv-extract
-  
-- name: Delete worker-pv-extract pod
-  shell: oc delete pod/worker-pv-extract
-
-- name: Delete ocp4-pv-extract pod
-  shell: oc delete pod/ocp4-pv-extract
-
-- name: Delete master results pvc
-  shell: oc delete pvc '{{ master_results.stdout }}'
-  
-- name: Delete worker results pvc
-  shell: oc delete pvc '{{ worker_results.stdout }}'
+  k8s:
+    state: absent
+    api_version: v1
+    kind: Pod
+    namespace: openshift-compliance
+    name: master-pv-extract
     
-- name: Delete ocp4 results pvc
-  shell: oc delete pvc '{{ ocp4_results.stdout }}'
+- name: Delete worker-pv-extract pod
+  k8s:
+    state: absent
+    api_version: v1
+    kind: Pod
+    namespace: openshift-compliance
+    name: worker-pv-extract
+  
+- name: Delete ocp4-pv-extract pod
+  k8s:
+    state: absent
+    api_version: v1
+    kind: Pod
+    namespace: openshift-compliance
+    name: ocp4-pv-extract
+
+
+- name: Delete master results PVC
+  k8s:
+    state: absent
+    api_version: v1
+    kind: PersistentVolumeClaim
+    namespace: openshift-compliance
+    name: '{{ master_results.stdout }}'
+
+- name: Delete ocp4 results PVC
+  k8s:
+    state: absent
+    api_version: v1
+    kind: PersistentVolumeClaim
+    namespace: openshift-compliance
+    name: '{{ ocp4_results.stdout }}'
+    
+- name: Delete worker results PVC
+  k8s:
+    state: absent
+    api_version: v1
+    kind: PersistentVolumeClaim
+    namespace: openshift-compliance
+    name: '{{ worker_results.stdout }}'
+  
+    
+
  
   
