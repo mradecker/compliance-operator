@@ -2,11 +2,10 @@
 
 - name: Create the openshift-compliance namespace
   k8s:
-    apply: yes
-    definition:
-      api_version: v1
-      kind: Namespace
-      name: openshift-compliance
+    state: present    
+    api_version: v1
+    kind: Namespace
+    name: openshift-compliance
 
 - name: Create openscap directory
   file:

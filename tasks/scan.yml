@@ -2,7 +2,7 @@
 
 - name: Define the ScanSetting
   k8s:
-    apply: yes
+    state: present
     definition:
       apiVersion: compliance.openshift.io/v1alpha1
       kind: ScanSetting

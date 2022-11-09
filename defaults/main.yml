@@ -4,17 +4,17 @@
 # Running the scan and results playbooks together requires a pause for the scan pods to complete.  The pause of 360 seconds can cause the playbook to hang.
 
 # Set this option to yes if installing the operator from the package manifest that corresponds to the catalog source
-install_operator: no
+install_operator: yes
 
 # Set this option to yes if you want the role to import the scan tasks after installing the operator
 scan: yes
 
 # Set this option to run Compliance Check Results task and to extract the XML results from node PVCs. 
-results: no
+results: yes
 
-cluster_url: https://api.< cluster_domain >:6443
+cluster_url: https://api.cluster-74xbz.74xbz.sandbox2956.opentlc.com:6443
 
-work_dir: < directory_for_all_artifacts >
+work_dir: $HOME
 
 git_url: https://github.com/openshift/compliance-operator
 
@@ -52,10 +52,10 @@ ocp4_results_dir: ocp4-scan-results
 
 # Check which catalog source you are using with "oc get packagemanifests -n openshift-compliance" and "oc get catalog source" 
 # Use the NAME of the catalog source.  Not the DISPLAY name.
-catalog_source: < your_catalog_source > 
+catalog_source: redhat-operators 
 
 # Specify the channel version/name in the subscription.  This can be found in 'oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml'
-channel_version: 4.11
+channel_version: 4.9
 
 # Choose your starting Cluster Service Version (startingCSV) 
 # You can check the currentCSV with "oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml | grep currentCSV:"

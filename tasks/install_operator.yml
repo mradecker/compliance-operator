@@ -2,7 +2,7 @@
 
 - name: Create operator group 
   k8s:
-    apply: yes
+    state: present
     definition: 
       apiVersion: operators.coreos.com/v1
       kind: OperatorGroup
@@ -16,7 +16,7 @@
 
 - name: Create subscription for compliance operator 
   k8s:
-    apply: yes
+    state: present
     definition:
       apiVersion: operators.coreos.com/v1alpha1
       kind: Subscription
@@ -24,7 +24,7 @@
         name: compliance-operator-sub
         namespace: '{{ namespace }}'
       spec:
-        channel: '{{ channel_version }}'
+        channel: latest
         installPlanApproval: Automatic
         name: compliance-operator
         source: '{{ catalog_source }}'
