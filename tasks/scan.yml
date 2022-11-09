@@ -30,6 +30,7 @@
     api_version: compliance.openshift.io/v1alpha1
     kind: ScanSettingBinding
     namespace: openshift-compliance
+    name: default
 
 - name: Create the ScanSettingBinding custom resource
   k8s:
@@ -39,6 +40,7 @@
       kind: ScanSettingBinding
       metadata:
         name: '{{ scan_name }}'
+        namespace: openshift-compliance
       profiles:
         - name: '{{ node_scan_profile }}'
           kind: Profile

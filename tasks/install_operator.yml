@@ -24,7 +24,7 @@
         name: compliance-operator-sub
         namespace: '{{ namespace }}'
       spec:
-        channel: latest
+        channel: release-0.1
         installPlanApproval: Automatic
         name: compliance-operator
         source: '{{ catalog_source }}'

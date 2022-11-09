@@ -2,11 +2,10 @@
   
 - name: Check to see if the scan completed
   k8s_info:
-    kind: ComplianceSuite
+    kind: Pod
     namespace: openshift-compliance
-    field_selectors:
-      - status.phase=DONE
-  register: scan_status
+    wait: yes
+    wait_sleep: 10
   
 ### Extraction of master Compliance Check Results and XML files
   
@@ -14,7 +13,6 @@
   file:
     path: '{{ work_dir }}/{{ master_results_dir }}'
     state: directory
-  when: scan_status.rc == 0
 
 - name: Create a backup directory to store previous results
   file:
@@ -25,6 +23,7 @@
   copy:
     src: '{{ work_dir }}/{{ master_results_dir }}/'
     dest: '{{ work_dir }}/backup'
+  ignore_errors: yes
 
 - name: Retrieve master scan results from PVC
   shell: oc get pvc -n {{ namespace}} | grep master | awk '{print $1}'
@@ -38,6 +37,7 @@
       kind: Pod
       metadata:
         name: master-pv-extract
+        namespace: openshift-compliance
       spec:
         containers:
         - name: master-pv-extract
@@ -54,7 +54,7 @@
 - name: Wait for  master-pv-extract pod creation
   k8s_info:
     kind: Pod
-    Name: master-pv-extract
+    name: master-pv-extract
     namespace: openshift-compliance
     wait: yes
     wait_sleep: 10
@@ -77,6 +77,7 @@
   copy:
     src: '{{ work_dir }}/{{ worker_results_dir }}/'
     dest: '{{ work_dir }}/backup'
+  ignore_errors: yes
 
 - name: Retrieve worker scan results from PVC
   shell: oc get pvc -n {{ namespace }} | grep worker | awk '{print $1}'
@@ -90,6 +91,7 @@
       kind: Pod
       metadata:
         name: worker-pv-extract
+        namespace: openshift-compliance
       spec:
         containers:
         - name: worker-pv-extract
@@ -129,6 +131,7 @@
   copy:
     src: '{{ work_dir }}/{{ ocp4_results_dir }}/'
     dest: '{{ work_dir }}/backup'
+  ignore_errors: yes
 
 - name: Retrieve ocp4 scan results from PVC
   shell: oc get pvc -n {{ namespace }} | grep ocp4 | awk '{print $1}'
@@ -142,6 +145,7 @@
       kind: Pod
       metadata:
         name: ocp4-pv-extract
+        namespace: openshift-compliance
       spec:
         containers:
         - name: ocp4-pv-extract
