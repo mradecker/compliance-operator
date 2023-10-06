@@ -27,13 +27,13 @@ scan_setting: custom
 cron_schedule: '0 1 * * *'
 
 # Choose a name for your scan
-scan_name: nist-moderate
+scan_name: stig
 
 # Choose a profile to use for your node scans. ( rhcos4-e8, rhcos4-moderate )   
-node_scan_profile: rhcos4-moderate
+node_scan_profile: rhcos4-stig
 
 # Choose a profile to use for your platform scans. ( ocp4-cis, ocp4-cis-node, ocp4-e8, ocp4-moderate ) 
-platform_scan_profile: ocp4-moderate
+platform_scan_profile: ocp4-stig
 
 ubi8: registry.access.redhat.com/ubi8/ubi
 
@@ -55,10 +55,10 @@ ocp4_results_dir: ocp4-scan-results
 catalog_source: redhat-operators 
 
 # Specify the channel version/name in the subscription.  This can be found in 'oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml'
-channel_version: 4.9
+channel_version: 4.12
 
 # Choose your starting Cluster Service Version (startingCSV) 
 # You can check the currentCSV with "oc get packagemanifests compliance-operator -n openshift-marketplace -o yaml | grep currentCSV:"
-version: compliance-operator.v0.1.57
+version: compliance-operator.v1.3.0
 
 
